@@ -2,14 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>{% block wiki_pagetitle %}{% endblock %} - django-\/\/  i K |</title>
+    <title>{% block wiki_pagetitle %}{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="author" content="www.django-wiki.org">
 
     <!-- Le styles -->
-    <link href="{{ STATIC_URL }}wiki/bootstrap/css/wiki-bootstrap.min.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}wiki/bootstrap/css/wiki-bootstrap.css" rel="stylesheet">
         
     {% render_block "css" %}
     
@@ -34,7 +34,7 @@
           <span class="icon-bar"></span>
         </button>
         {% block wiki_header_branding %}
-        <a class="navbar-brand" href="{% url 'wiki:root' %}">django-\/\/ i K |</a>
+        <a class="navbar-brand" href="{% url 'wiki:root' %}">Bitcoin Security Project</a>
         {% endblock %}
         <div class="nav-collapse collapse navbar-responsive-collapse">
           <form class="navbar-form pull-right-block-on-responsive" id="wiki-search-form" method="GET" action="{% url 'wiki:search' %}">
@@ -70,17 +70,19 @@
             {% else %}
             <ul class="nav navbar-nav">
               <li>
-                <a href="{% login_url as wiki_login_url %}{{ wiki_login_url }}">{% trans "Log in" %}</a>
+                <a href="{% url 'auth_login' %}">{% trans "Log in" %}</a>
               </li>
               <li>
-                <a href="{% url 'wiki:signup' %}">{% trans "Sign up" %}</a>
+                <a href="{% url 'registration_register' %}">{% trans "Sign up" %}</a>
               </li>
             </ul>
             {% endif %}
           </div>
           <ul class="nav navbar-nav">
             <li class="active"><a href="/">{% trans "Home" %}</a></li>
-            <li><a href="https://github.com/benjaoming/django-wiki" target="_blank">{% trans "About" %}</a></li>
+            <li><a href="/About">{% trans "About" %}</a></li>
+            <li><a href="/Contributing">{% trans "Contribute" %}</a></li>
+			<li style="margin-top: 5px;"><a class="coinbase-button" data-code="79bacf575329513e6486d2889bff4188" data-button-style="custom_small" href="https://coinbase.com/checkouts/79bacf575329513e6486d2889bff4188">Donate Bitcoins</a><script src="https://coinbase.com/assets/button.js" type="text/javascript"></script></li>         
           </ul>
         </div>
       </div>
@@ -108,7 +110,6 @@
       <footer id="wiki-footer">
         <hr />
         {% block wiki_footer_logo %}
-        <a href="https://github.com/benjaoming/django-wiki" class="pull-right"><img src="{{ STATIC_URL }}wiki/img/github_icon.png" /></a>
         {% endblock %}
         {% block wiki_footer_prepend %}
         {% endblock %}

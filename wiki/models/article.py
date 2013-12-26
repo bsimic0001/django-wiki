@@ -14,6 +14,7 @@ from wiki.core import compat
 from wiki import managers
 from mptt.models import MPTTModel
 from django.core.urlresolvers import reverse
+import logging
 
 class Article(models.Model):
     
@@ -91,7 +92,7 @@ class Article(models.Model):
                 descendant.article.other_read = self.other_read
                 descendant.article.other_write = self.other_write
                 descendant.save()
-    
+
     def set_group_recursive(self):
         for descendant in self.descendant_objects():
             if descendant.INHERIT_PERMISSIONS:

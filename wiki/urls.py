@@ -5,7 +5,7 @@ from wiki.conf import settings
 from wiki.core.plugins import registry
 from wiki.views import article, accounts
 from wiki.core.utils import get_class_from_str
-
+from django.contrib.auth.views import password_reset
 
 class WikiURLPatterns(object):
     '''
@@ -33,7 +33,7 @@ class WikiURLPatterns(object):
 
     search_view_class = settings.SEARCH_VIEW
     article_diff_view = 'wiki.views.article.diff'
-
+    
     # account views
     signup_view_class = accounts.Signup
     login_view_class = accounts.Login
@@ -59,13 +59,14 @@ class WikiURLPatterns(object):
             url('^_search/$', get_class_from_str(self.search_view_class).as_view(), name='search'),
             url('^_revision/diff/(?P<revision_id>\d+)/$', self.article_diff_view, name='diff'),
        )
-        return urlpatterns
+        return urlpatterns  
 
     def get_accounts_urls(self):
         urlpatterns = patterns('',
             url('^_accounts/sign-up/$', self.signup_view_class.as_view(), name='signup'),
             url('^_accounts/logout/$', self.logout_view_class.as_view(), name='logout'),
-            url('^_accounts/login/$', self.login_view_class.as_view(), name='login'),
+            url('^_accounts/login/$', self.login_view_class.as_view(), name='login'),   
+            url(r'^accounts/password/reset$', 'django.contrib.auth.views.password_reset', {'template_name': 'wiki/registration/password_reset_form.html'}),                    
            )
         return urlpatterns
 

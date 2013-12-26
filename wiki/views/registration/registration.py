@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Here is a very basic handling of accounts.
+"""Here is a very basic handling of registration.
 If you have your own account handling, don't worry, 
 just switch off account handling in 
 settings.WIKI_ACCOUNT_HANDLING = False
@@ -20,35 +20,26 @@ from django.template.context import RequestContext
 from django.utils.translation import ugettext as _
 from django.views.generic.base import View
 from django.views.generic.edit import CreateView, FormView
-from django.contrib.auth.views import password_reset_confirm
-
 
 from wiki import forms
 from wiki.conf import settings
 
-from registration.backends.default.views import RegistrationView as BaseRegistrationView
-
 from wiki.core.compat import get_user_model
 User = get_user_model()
 
-#def password_reset_confirm(request, uidb64=None, token=None, set_password_form = StrongPasswordResetForm):
-#    super(request, uidb64, token, set_password_form)
 
-class StrongRegistrationView(BaseRegistrationView):    
-    form_class = forms.StrongRegistrationForm
-
-class Signup(CreateView):
+class Register(CreateView):
     model = User
     form_class = forms.UserCreationForm
-    template_name = "wiki/accounts/signup.html"
+    template_name = "wiki/registration/registration_form.html"
     
     def dispatch(self, request, *args, **kwargs):
         # Let logged in super users continue
         if not request.user.is_anonymous() and not request.user.is_superuser:
             return redirect('wiki:root')
         # If account handling is disabled, don't go here
-        if not settings.ACCOUNT_HANDLING:
-            return redirect(settings.SIGNUP_URL)
+        #if not settings.ACCOUNT_HANDLING:
+            #return redirect(settings.SIGNUP_URL)
         # Allow superusers to use signup page...
         if not request.user.is_superuser and not settings.ACCOUNT_SIGNUP_ALLOWED:
             c = RequestContext(request, {'error_msg': _(u'Account signup is only allowed for administrators.'),

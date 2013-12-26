@@ -5,6 +5,8 @@ import string
 from datetime import timedelta
 from django.utils import timezone
 
+from registration.forms import RegistrationFormUniqueEmail
+
 from django import forms
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
@@ -20,11 +22,38 @@ from wiki.editors import getEditor
 from wiki.core.diff import simple_merge
 from django.forms.widgets import HiddenInput
 from wiki.core.plugins.base import PluginSettingsFormMixin
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, SetPasswordForm
 from wiki.core import permissions
+
+from passwords.validators import validate_length, common_sequences, dictionary_words, complexity
+from captcha.fields import CaptchaField
 
 from wiki.core.compat import get_user_model
 User = get_user_model()
+
+class StrongPasswordResetForm(SetPasswordForm):
+    
+    def clean_new_password1(self):
+        password = self.cleaned_data['new_password1']
+        
+        validate_length(password)  
+        common_sequences(password)
+        complexity(password)
+        
+        return password
+    
+class StrongRegistrationForm(RegistrationFormUniqueEmail):
+    
+    captcha = CaptchaField()
+    
+    def clean_password1(self):
+        password = self.cleaned_data['password1']
+        
+        validate_length(password)  
+        common_sequences(password)
+        complexity(password)
+        
+        return password
 
 class SpamProtectionMixin():
     """Check a form for spam. Only works if properties 'request' and 'revision_model' are set."""

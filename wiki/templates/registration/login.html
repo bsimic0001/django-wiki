@@ -1,0 +1,40 @@
+{% extends "wiki/base.html" %}
+{% load i18n wiki_tags sekizai_tags %}
+
+{% block wiki_pagetitle %}Login{% endblock %}
+
+{% block wiki_contents %}
+
+<h1 class="page-header">{% trans "Sign In" %}</h1>
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+<form method="post" action="{% url 'django.contrib.auth.views.login' %}" class="form-horizontal">
+{% wiki_form form %}
+
+<p><a href="{% url 'auth_password_reset' %}">Forgot</a> your password? <a href="{% url 'registration_register' %}">Need an account</a>?</p>
+
+<div class="form-group form-actions">
+  <div class="col-lg-2"></div>
+  <div class="col-lg-10">
+    <button type="submit" name="save_changes" class="btn btn-primary btn-large">
+      <span class="icon-plus"></span>
+      {% trans "Login..." %}
+    </button>
+  </div>
+</div>
+
+</form>
+
+{% addtoblock "js" %}
+<script type="text/javascript">
+  function {{ honeypot_jsfunction }}() {
+    $('.{{ honeypot_class }}').parent().parent().hide();
+  }
+  $(document).ready({{ honeypot_jsfunction }});
+</script>
+{% endaddtoblock %}
+
+{% endblock %}
